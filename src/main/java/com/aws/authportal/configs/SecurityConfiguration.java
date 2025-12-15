@@ -13,13 +13,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
 import static com.aws.authportal.entity.Permission.*;
 import static com.aws.authportal.entity.Role.ADMIN;
 import static com.aws.authportal.entity.Role.MANAGER;
-import static org.apache.tomcat.util.http.Method.*;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequestMapping("/api/v1/auth")
 @RestController
 public class AuthenticationController {
@@ -40,6 +43,11 @@ public class AuthenticationController {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
+        List<String> roles = authenticatedUser.getAuthorities()
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
+        loginResponse.setRoles(roles);
 
         return ResponseEntity.ok(loginResponse);
     }

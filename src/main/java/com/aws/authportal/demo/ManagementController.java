@@ -11,12 +11,12 @@ public class ManagementController {
         return "GET:: Management API is working!";
     }
 
-    @PutMapping
+    @PostMapping
     public String post(){
         return "POST:: Management API is working!";
     }
 
-    @PostMapping
+    @PutMapping
     public String put(){
         return "PUT:: Management API is working!";
     }

@@ -11,12 +11,12 @@ public class AdminController {
         return "GET:: Admin API is working!";
     }
 
-    @PutMapping
+    @PostMapping
     public String post(){
         return "POST:: Admin API is working!";
     }
 
-    @PostMapping
+    @PutMapping
     public String put(){
         return "PUT:: Admin API is working!";
     }

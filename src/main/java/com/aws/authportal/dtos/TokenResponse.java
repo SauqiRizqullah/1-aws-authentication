@@ -5,23 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-@Getter
 @Setter
+@Getter
 @Builder
-public class LoginResponse {
+public class TokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
 
     @JsonProperty("refresh_token")
     private String refreshToken;
-
-    private long expiresIn;
-
-    private List<String> roles;
-
-    public String getAccessToken() {
-        return accessToken;
-    }
 }

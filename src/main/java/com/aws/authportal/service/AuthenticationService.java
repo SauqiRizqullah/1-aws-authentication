@@ -65,6 +65,7 @@ public class AuthenticationService {
         user.setFullName(input.getFullName());
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setPhoneNumber(input.getPhoneNumber());
 
         Role role = mapRoleInput(input.getRole());
         user.setRole(role);

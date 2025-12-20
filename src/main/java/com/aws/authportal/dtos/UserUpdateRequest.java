@@ -1,6 +1,5 @@
 package com.aws.authportal.dtos;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -8,15 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterUserDto {
-
-    @NotBlank(message = "Email must be filled")
-    @Email(message = "Email format is invalid")
-    @Pattern(
-            regexp = "^[a-zA-Z0-9._%+-]+@(gmail|yahoo|hotmail|outlook)\\.(com|co\\.id)$",
-            message = "Allowed domains are gmail, yahoo, hotmail, outlook with .com or .co.id"
-    )
-    private String email;
+public class UserUpdateRequest {
 
     @NotBlank(message = "Password must be filled")
     @Pattern(
@@ -25,15 +16,10 @@ public class RegisterUserDto {
     )
     private String password;
 
-    @NotBlank(message = "Full name must be filled")
-    private String fullName;
-
     @NotBlank(message = "Phone number must be filled")
     @Pattern(
             regexp = "^(\\+62|62|0)8[1-9][0-9]{6,10}$",
             message = "Phone number format is not mathched with the required format"
     )
     private String phoneNumber;
-
-    private String role;
 }

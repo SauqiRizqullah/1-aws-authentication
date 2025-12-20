@@ -1,6 +1,7 @@
 package com.aws.authportal.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,6 +32,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false,name = "phone_number")
+    private  String phoneNumber;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")

@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @Column(nullable = false,name = "phone_number")
     private  String phoneNumber;
 
+    @Column(nullable = true)
+    private long salary;
+
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;

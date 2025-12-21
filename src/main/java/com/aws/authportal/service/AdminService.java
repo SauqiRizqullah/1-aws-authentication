@@ -2,6 +2,7 @@ package com.aws.authportal.service;
 
 import com.aws.authportal.dtos.SalaryResponse;
 import com.aws.authportal.dtos.SearchSalaryRequest;
+import com.aws.authportal.entity.Role;
 import com.aws.authportal.entity.User;
 import com.aws.authportal.repository.UserRepository;
 import com.aws.authportal.specification.SalarySpecification;
@@ -97,5 +98,59 @@ public class AdminService {
         Specification<User> specification = SalarySpecification.getSpecification(request);
 
         return userRepository.findAll(specification, pageable);
+    }
+
+    public String changeUserRole(String userEmail, String newRole) {
+
+        // 1. Validasi akun yang sedang login adalah ADMIN
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+
+        boolean isAdmin = currentUser.getRole().name().equalsIgnoreCase("ADMIN");
+
+        if (!isAdmin) {
+            throw new RuntimeException("Unauthorized: Only ADMIN can change user roles");
+        }
+
+        // 2. Validasi role baru dan update
+        Role updatedRole;
+
+        try {
+            updatedRole = Role.valueOf(newRole.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid role: Allowed roles are USER, MANAGER, ADMIN");
+        }
+
+        // 3. Cari user berdasarkan email
+        Optional<User> user = userRepository.findByEmail(userEmail);
+
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found for email: " + userEmail);
+        }
+
+        User targetUser = user.get();
+        // ❌ ADMIN cannot modify other ADMIN accounts
+        if (targetUser.getRole() == Role.ADMIN && !targetUser.getEmail().equals(currentUser.getEmail())) {
+            throw new RuntimeException("Forbidden: Cannot modify another ADMIN account");
+        }
+
+        // ❌ Prevent ADMIN from demoting himself
+        if (targetUser.getEmail().equals(currentUser.getEmail()) && updatedRole != Role.ADMIN) {
+            throw new RuntimeException("Invalid operation: ADMIN cannot downgrade their own role");
+        }
+
+        // If same role, no change
+        if (targetUser.getRole().equals(updatedRole)) {
+            return "User " + targetUser.getFullName() + " already has role: " + updatedRole.name();
+        }
+
+        // Save role change
+        Role oldRole = targetUser.getRole();
+        targetUser.setRole(updatedRole);
+        userRepository.save(targetUser);
+
+        return "Role changed SUCCESSFULLY for " + targetUser.getFullName() +
+                " | Old Role: " + oldRole.name() +
+                " | New Role: " + updatedRole.name();
     }
 }

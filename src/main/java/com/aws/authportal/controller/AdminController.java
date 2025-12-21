@@ -71,4 +71,10 @@ public class AdminController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/change-role")
+    public ResponseEntity<String> changeUserRole(@RequestParam String userEmail, @RequestParam String newRole){
+        String response = adminService.changeUserRole(userEmail, newRole);
+        return ResponseEntity.ok(response);
+    }
 }

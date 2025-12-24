@@ -1,7 +1,7 @@
 package com.aws.authportal.controller;
 
-import com.aws.authportal.controller.dtos.CommonResponse;
-import com.aws.authportal.controller.dtos.PagingResponse;
+import com.aws.authportal.dtos.CommonResponse;
+import com.aws.authportal.dtos.PagingResponse;
 import com.aws.authportal.dtos.SalaryResponse;
 import com.aws.authportal.dtos.SearchSalaryRequest;
 import com.aws.authportal.entity.User;

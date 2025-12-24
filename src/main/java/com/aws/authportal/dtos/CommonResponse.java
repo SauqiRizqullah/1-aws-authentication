@@ -1,4 +1,4 @@
-package com.aws.authportal.controller.dtos;
+package com.aws.authportal.dtos;
 
 import lombok.Builder;
 import lombok.Getter;

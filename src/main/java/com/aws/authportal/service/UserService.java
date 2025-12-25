@@ -2,9 +2,13 @@ package com.aws.authportal.service;
 
 
 import com.aws.authportal.dtos.UserUpdateRequest;
+import com.aws.authportal.entity.DayOff;
 import com.aws.authportal.entity.User;
 import com.aws.authportal.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,5 +105,10 @@ public class UserService {
 
         return "User named " + targetUser.getFullName() + " has been deleted.";
 
+    }
+
+    public Page<DayOff> findAll(Specification<User> specification, Pageable pageable) {
+
+        return userRepository.findAll(specification, pageable);
     }
 }

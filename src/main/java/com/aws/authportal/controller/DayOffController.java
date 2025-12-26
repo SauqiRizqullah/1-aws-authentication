@@ -91,4 +91,20 @@ public class DayOffController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/approve")
+    public ResponseEntity<String> approveDayOff(
+            @RequestParam String dayOffId
+    ){
+        String response = dayOffService.approveDayOff(dayOffId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/reject")
+    public ResponseEntity<String> rejectDayOff(
+            @RequestParam String dayOffId
+    ){
+        String response = dayOffService.rejectDayoff(dayOffId);
+        return ResponseEntity.ok(response);
+    }
 }

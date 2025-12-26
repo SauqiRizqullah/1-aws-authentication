@@ -172,4 +172,56 @@ public class DayOffService {
                 .build()
         );
     }
+
+    public String approveDayOff(String dayOffId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        if (currentUser == null) {
+            throw new RuntimeException("Unauthorized: No authenticated user found");
+        }
+
+        if (!currentUser.getRole().name().equalsIgnoreCase("ADMIN")) {
+            throw new RuntimeException("Unauthorized: Only ADMIN can view day-offs");
+        }
+
+        Optional<DayOff> dayOff = dayOffRepository.findById(dayOffId);
+
+        if (dayOff.isEmpty()) {
+            throw new RuntimeException("Day-off request not found");
+        }
+
+        DayOff targetDayOff = dayOff.get();
+        targetDayOff.setStatus(DayOffStatus.APPROVED);
+
+        dayOffRepository.save(targetDayOff);
+
+        return "Day-off request from " + targetDayOff.getUser().getFullName() + " has been approved successfully.";
+    }
+
+    public String rejectDayoff(String dayOffId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        if (currentUser == null) {
+            throw new RuntimeException("Unauthorized: No authenticated user found");
+        }
+
+        if (!currentUser.getRole().name().equalsIgnoreCase("ADMIN")) {
+            throw new RuntimeException("Unauthorized: Only ADMIN can view day-offs");
+        }
+
+        Optional<DayOff> dayOff = dayOffRepository.findById(dayOffId);
+
+        if (dayOff.isEmpty()) {
+            throw new RuntimeException("Day-off request not found");
+        }
+
+        DayOff targetDayOff = dayOff.get();
+        targetDayOff.setStatus(DayOffStatus.REJECTED);
+
+        dayOffRepository.save(targetDayOff);
+
+        return "Day-off request from " + targetDayOff.getUser().getFullName() + " has been rejected successfully.";
+    }
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Builder
@@ -15,4 +17,7 @@ public class SearchDayOffRequest {
     private String direction;
 
     private User user;
+
+    // untuk /all + fullName
+    private List<String> userIds;
 }

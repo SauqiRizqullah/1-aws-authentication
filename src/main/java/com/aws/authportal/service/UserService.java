@@ -107,8 +107,13 @@ public class UserService {
 
     }
 
-    public Page<DayOff> findAll(Specification<User> specification, Pageable pageable) {
+    public Optional<User> findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
 
-        return userRepository.findAll(specification, pageable);
+    // ✅ NEW: flexible search (recommended)
+    public List<User> findByFullNameContains(String fullName) {
+        log.info("Searching users by fullName contains: {}", fullName);
+        return userRepository.findByFullNameContainingIgnoreCase(fullName);
     }
 }

@@ -1,9 +1,6 @@
 package com.aws.authportal.controller;
 
-import com.aws.authportal.dtos.CommonResponse;
-import com.aws.authportal.dtos.PagingResponse;
-import com.aws.authportal.dtos.SalaryResponse;
-import com.aws.authportal.dtos.SearchSalaryRequest;
+import com.aws.authportal.dtos.*;
 import com.aws.authportal.entity.User;
 import com.aws.authportal.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -77,4 +74,7 @@ public class AdminController {
         String response = adminService.changeUserRole(userEmail, newRole);
         return ResponseEntity.ok(response);
     }
+
+
+
 }

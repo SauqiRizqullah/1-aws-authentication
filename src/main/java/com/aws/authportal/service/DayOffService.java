@@ -8,8 +8,7 @@ import com.aws.authportal.entity.DayOffStatus;
 import com.aws.authportal.entity.DayOffType;
 import com.aws.authportal.entity.User;
 import com.aws.authportal.repository.DayOffRepository;
-import com.aws.authportal.specification.OwnDayOffSpecification;
-import com.aws.authportal.specification.SalarySpecification;
+import com.aws.authportal.specification.DayOffSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -94,7 +95,67 @@ public class DayOffService {
 
         Pageable pageable = PageRequest.of(searchRequest.getPage() -1, searchRequest.getSize(), sort);
 
-        Specification<DayOff> specification = OwnDayOffSpecification.getSpecification(searchRequest);
+        Specification<DayOff> specification = DayOffSpecification.getSpecification(searchRequest);
+
+        Page<DayOff> dayOffPage = dayOffRepository.findAll(specification, pageable);// Placeholder return statement
+
+        return dayOffPage.map(d -> DayOffResponse.builder()
+                .id(d.getId())
+                .userName(d.getUser().getFullName())
+                .userRole(d.getUser().getRole().name())
+                .dayOffType(d.getDayOffType().name())
+                .startDate(d.getStartDate().toString())
+                .endDate(d.getEndDate().toString())
+                .totalDays(d.getTotalDays())
+                .reason(d.getReason())
+                .status(d.getStatus().name())
+                .build()
+        );
+    }
+
+    public Page<DayOffResponse> getAllDayOffs(SearchDayOffRequest searchDayOffRequest, String fullName) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        if (currentUser == null) {
+            throw new RuntimeException("Unauthorized: No authenticated user found");
+        }
+
+        if (!currentUser.getRole().name().equalsIgnoreCase("ADMIN")) {
+            throw new RuntimeException("Unauthorized: Only ADMIN can view day-offs");
+        }
+
+        if (fullName != null && !fullName.isBlank()) {
+            List<User> users = userService.findByFullNameContains(fullName);
+
+            if (users.isEmpty()){
+                return Page.empty();
+            }
+
+            List<String> userIds = users.stream()
+                    .map(User::getId)
+                    .toList();
+
+            searchDayOffRequest.setUserIds(userIds);
+        }
+
+        if (searchDayOffRequest.getPage() <= 0) {
+            searchDayOffRequest.setPage(1);
+        }
+        if (searchDayOffRequest.getSize() <= 0) {
+            searchDayOffRequest.setSize(10);
+        }
+        if (searchDayOffRequest.getDirection() == null){
+            searchDayOffRequest.setDirection("DESC");
+        }
+
+        String validSortBy = "startDate";
+
+        Sort sort = Sort.by(Sort.Direction.fromString(searchDayOffRequest.getDirection()), validSortBy);
+
+        Pageable pageable = PageRequest.of(searchDayOffRequest.getPage() - 1, searchDayOffRequest.getSize(), sort);
+
+        Specification<DayOff> specification = DayOffSpecification.getSpecification(searchDayOffRequest);
 
         Page<DayOff> dayOffPage = dayOffRepository.findAll(specification, pageable);// Placeholder return statement
 

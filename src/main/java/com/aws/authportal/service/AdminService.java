@@ -1,7 +1,10 @@
 package com.aws.authportal.service;
 
+import com.aws.authportal.dtos.DayOffResponse;
 import com.aws.authportal.dtos.SalaryResponse;
+import com.aws.authportal.dtos.SearchDayOffRequest;
 import com.aws.authportal.dtos.SearchSalaryRequest;
+import com.aws.authportal.entity.DayOff;
 import com.aws.authportal.entity.Role;
 import com.aws.authportal.entity.User;
 import com.aws.authportal.repository.UserRepository;
@@ -153,4 +156,5 @@ public class AdminService {
                 " | Old Role: " + oldRole.name() +
                 " | New Role: " + updatedRole.name();
     }
+
 }

@@ -1,7 +1,6 @@
 package com.aws.authportal.controller;
 
 import com.aws.authportal.dtos.*;
-import com.aws.authportal.entity.DayOff;
 import com.aws.authportal.service.DayOffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,5 +56,39 @@ public class DayOffController {
                         .paging(paging)
                         .build()
         );
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<CommonResponse<Page<DayOffResponse>>> getAllDayOffs(
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "size", defaultValue = "10") Integer size,
+            @RequestParam(name = "direction", defaultValue = "DESC") String direction,
+            @RequestParam(name = "fullName", required = false) String fullName
+    ){
+        SearchDayOffRequest searchDayOffRequest = SearchDayOffRequest.builder()
+                .page(page)
+                .size(size)
+                .direction(direction)
+                .build();
+
+        Page<DayOffResponse> allDayOffs = dayOffService.getAllDayOffs(searchDayOffRequest, fullName);
+
+        PagingResponse pagingResponse = PagingResponse.builder()
+                .page(allDayOffs.getPageable().getPageNumber()+1)
+                .size(allDayOffs.getPageable().getPageSize())
+                .totalPages(allDayOffs.getTotalPages())
+                .totalElements(allDayOffs.getTotalElements())
+                .hasNext(allDayOffs.hasNext())
+                .hasPrevious(allDayOffs.hasPrevious())
+                .build();
+
+        CommonResponse<Page<DayOffResponse>> response = CommonResponse.<Page<DayOffResponse>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Success retrieving all day-offs")
+                .data(allDayOffs)
+                .paging(pagingResponse)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -59,4 +59,14 @@ public class InternalDocumentService {
                 .createdAt(saved.getCreatedAt())
                 .build();
     }
+
+    public InternalDocument getById(String id){
+        return internalDocumentRepository.findById(id).orElseThrow(() -> new RuntimeException("Document not found"));
+    }
+
+    public void delete(String id){
+        InternalDocument file = getById(id);
+        fileStorageService.delete(file.getFileKey());
+        internalDocumentRepository.delete(file);
+    }
 }

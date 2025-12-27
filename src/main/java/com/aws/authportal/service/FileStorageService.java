@@ -18,7 +18,7 @@ public class FileStorageService {
 
     private final S3Client s3Client;
 
-    @Value("${aws.s3.1-hands-on-auth-portal}")
+    @Value("${aws.s3.bucket-name}")
     private String bucketName;
 
     public String upload(MultipartFile file, String folder) {

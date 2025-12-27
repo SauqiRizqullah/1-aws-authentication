@@ -12,19 +12,13 @@ public class InternalDocumentIdGenerator {
 
     @Transactional(readOnly = true)
     public String generateNextId() {
-        String prefix = "ID";
-        String query = "SELECT COALESCE(MAX(CAST(SUBSTRING(id, 3) AS INTEGER)), 0) FROM m_internal_documents";
+        String prefix = "DOC";
+        String query = """
+                SELECT COALESCE(MAX(CAST(SUBSTRING(id, 4) AS INTEGER)), 0)
+                FROM m_internal_documents
+                """;
         Object result = em.createNativeQuery(query).getSingleResult();
-        int max = 0;
-        if (result instanceof Number) {
-            max = ((Number) result).intValue();
-        } else {
-            try {
-                max = Integer.parseInt(String.valueOf(result));
-            } catch (Exception ignored) {
-            }
-        }
-        int next = max + 1;
-        return prefix + String.format("%03d", next);
+        int max = ((Number) result).intValue();
+        return prefix + String.format("%03d", max + 1);
     }
 }

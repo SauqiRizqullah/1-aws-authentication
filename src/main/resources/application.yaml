@@ -1,0 +1,4 @@
+aws:
+  s3:
+    region: ap-southeast-1
+    bucket-name: 1-hands-on-auth-portal

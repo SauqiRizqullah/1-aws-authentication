@@ -23,7 +23,7 @@ public class InternalDocument {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "file_key")
+    @Column(name = "file_key", nullable = false)
     private String fileKey; // s3 file key
     @Column(name = "file_type")
     private String fileType;
